@@ -1,0 +1,5 @@
+WAKE_WORD = "et Pascal"
+AUDIO_FOLDER_LOCATION = "audio/"
+LANGUAGE = "fr"
+DEFAULT_MODEL_NAME = "gpt-3.5-turbo"
+PAUSE_WAKE_WORD_SECONDS = 60
