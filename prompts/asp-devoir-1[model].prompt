@@ -1,0 +1,4 @@
+Please evaluate the student's code using the correction matrix and return the results for each point. The correction matrix is a set of rules for identifying errors in the code, and also output the students score below as such : (Score = 5/5)
+correction matrix (total 5 points):
+1. Enum pour les types de température (2 points)
+2. Les méthodes de conversion fonctionnent (3 points)

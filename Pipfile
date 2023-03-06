@@ -10,6 +10,8 @@ speechrecognition = "*"
 gtts = "*"
 pygame = "*"
 pyaudio = "*"
+pandas = "*"
+openpyxl = "*"
 
 [dev-packages]
 black = "*"

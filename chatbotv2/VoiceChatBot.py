@@ -80,14 +80,14 @@ class VoiceChatbot:
         tts.save(audio_file_location)
         return audio_file_location
 
-    def get_response(self):
+    def get_response(self, temperature=0.7, presence_penalty=0, frequency_penalty=0, n=1):
         """
         Gets a response from the chatbot and converts it to speech for the user to hear.
 
         Returns:
             str: The text of the response.
         """
-        response = self.chatbot.get_response()
+        response = self.chatbot.get_response(temperature, presence_penalty, frequency_penalty, n)
         audio_file_location = self._save_audio(response, AUDIO_FOLDER_LOCATION)
         self._play_audio(audio_file_location)
         return response
@@ -106,3 +106,8 @@ class VoiceChatbot:
 
     def get_total_tokens_used(self):
         return self.chatbot.get_total_tokens_used()
+
+
+
+
+
