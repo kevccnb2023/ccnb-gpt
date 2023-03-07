@@ -15,14 +15,21 @@ def read_file(filename):
 
 class Devoir1AspCorrector:
     def __init__(self, controller_prompt_path: str, view_prompt_path: str, model_prompt_path: str):
+
+        self.bot = ChatBot("gpt-3.5-turbo", "vous etes un enseignant qui corrige des devoirs. repondez seulement en format csv selon la grille de correction. ")
+        self.temperature = 0
+    
+        #I have a correction matrix and a prompt for each file I want to grade
         self.controller_prompt = read_file(controller_prompt_path)
         self.view_prompt = read_file(view_prompt_path)
         self.model_prompt = read_file(model_prompt_path)
-        self.bot = ChatBot("gpt-3.5-turbo", "vous etes un enseignant qui corrige des devoirs. repondez seulement en format csv selon la grille de correction. ")
-        self.temperature = 0.2
+
+
 
     def correct(self, folder) -> List[str]:
         responses = []
+
+        #I have 3 files from students I want to correct
         controller_file = self.get_student_controller(folder)
         view_file = self.get_student_view(folder)
         model_file = self.get_student_model(folder)
