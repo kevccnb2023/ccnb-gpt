@@ -39,7 +39,7 @@ class VoiceChatbot:
 
         with speech.Microphone() as source:
             print("Talk")
-            recognize.adjust_for_ambient_noise(source, duration=0.2)
+            recognize.adjust_for_ambient_noise(source)
             audio_text = recognize.listen(source)
             print("Done listening")
 
@@ -47,8 +47,9 @@ class VoiceChatbot:
             speech_to_text_result = recognize.recognize_google(audio_text, language=LANGUAGE)
             return speech_to_text_result
 
-        except:
+        except Exception as e:
             print("Sorry, I did not get that")
+            print(e)
             return None
 
     def _play_audio(self, audio_file_location):

@@ -5,9 +5,16 @@ Assistant Pascal is a voice chatbot that uses Google Text-to-Speech (gTTS) and S
 Assistant Pascal est un chatbot vocal qui utilise Google Text-to-Speech (gTTS) et SpeechRecognition pour écouter et répondre aux entrées utilisateur. Le chatbot est construit en utilisant la bibliothèque SpeechRecognition, la bibliothèque openai, la bibliothèque gTTS et la bibliothèque Pygame.
 ## Installation
 
-To use this chatbot, you will need to have Python 3.x and pipenv installed on your computer. If you do not already have Python installed, you can download the latest version from the [official Python website](https://www.python.org/downloads/). To install pipenv, run the following command in your terminal or command prompt:
+To use this chatbot, you will need to have Python 3.x and pipenv installed on your computer. If you do not already have Python installed, you can download the latest version from the [official Python website](https://www.python.org/downloads/). Raspberry Pi needs flac from apt install!
+
 ```bash
-pip install pipenv
+sudo apt install python3-pip python3-dev portaudio19-dev flac
+```
+
+To install pipenv, run the following command in your terminal or command prompt:
+
+```
+python3 -m pip install pipenv
 ```
 Next, navigate to the project directory and run the following command to install the project dependencies:
 ```bash
