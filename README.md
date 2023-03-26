@@ -16,7 +16,7 @@ To install pipenv, open a command prompt or Powershell terminal and run the foll
 
 / Pour installer pipenv, ouvrez une invite de commande ou un terminal Powershell et exécutez la commande suivante :
 ```bash
-pip install pipenv
+python -m pip install pipenv
 ```
 
 ## Linux (Ubuntu)
