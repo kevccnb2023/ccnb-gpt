@@ -54,6 +54,10 @@ This will create a new virtual environment and install the dependencies specifie
 
 ## Usage
 
+You will need to sign up for an OpenAI API key to use this chatbot with the GPT-3.5 model. Once you have an API key, you can set it as an environment variable called OPENAI_API_KEY in the .env file.
+
+/ Vous devrez vous inscrire pour obtenir une clé API OpenAI pour utiliser ce chatbot avec le modèle GPT-3.5. Une fois que vous avez une clé API, vous pouvez la définir en tant que variable d'environnement appelée OPENAI_API_KEY dans le fichier .env
+
 Look at constants.py to set preferences.
 you need a folder called audio in your root folder of your project
 
