@@ -1,5 +1,0 @@
-Please evaluate the student's code using the correction matrix and return the results for each point. The correction matrix is a set of rules for identifying errors in the code, and also output the students score below as such : (Score = 5/5)
-correction matrix (total 6 points):
-1. 'la balise <title> contient ce texte : "Convertisseur de température par"' (1 point)
-2. "un champ texte & 2 drop downs et un bouton sont utilises" (3 points)
-3. "la balise <table> est utilisée pour l’alignement du formulaire" (2 points)

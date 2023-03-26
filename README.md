@@ -1,22 +1,41 @@
 # Assistant Pascal
 
-Assistant Pascal is a voice chatbot that uses Google Text-to-Speech (gTTS) and SpeechRecognition to listen and respond to user input. The chatbot is built using the SpeechRecognition library, the gTTS library, openai library, and the Pygame library.
+Assistant Pascal is a voice chatbot that uses Google Text-to-Speech (gTTS) and SpeechRecognition to listen and respond to user input. The chatbot is built using the SpeechRecognition library, the gTTS library, the Pygame library, and the OpenAI library.
 
-Assistant Pascal est un chatbot vocal qui utilise Google Text-to-Speech (gTTS) et SpeechRecognition pour écouter et répondre aux entrées utilisateur. Le chatbot est construit en utilisant la bibliothèque SpeechRecognition, la bibliothèque openai, la bibliothèque gTTS et la bibliothèque Pygame.
+Assistant Pascal est un chatbot vocal qui utilise Google Text-to-Speech (gTTS) et SpeechRecognition pour écouter et répondre aux entrées utilisateur. Le chatbot est construit en utilisant la bibliothèque SpeechRecognition, la bibliothèque gTTS, la bibliothèque Pygame et la bibliothèque OpenAI.
+
 ## Installation
 
-To use this chatbot, you will need to have Python 3.x and pipenv installed on your computer. If you do not already have Python installed, you can download the latest version from the [official Python website](https://www.python.org/downloads/). Raspberry Pi needs flac from apt install!
+To use this chatbot, you will need to have Python 3.10 and pipenv installed on your computer. If you do not already have Python installed, you can download the latest version from the [official Python website](https://www.python.org/downloads/release/python-31010/). 
 
+## Windows
+
+To install pipenv, open a command prompt or Powershell terminal and run the following command:
+```bash
+pip install pipenv
+```
+
+flac package only for raspberry pi 4
+
+## Linux (Ubuntu)
+
+On Ubuntu, you can install pipenv by running the following command in your terminal:
+```bash
+sudo apt install python3-pip python3-dev portaudio19-dev
+python3 -m pip install pipenv
+
+```
+
+## Raspberry Pi
+
+On Ubuntu, you can install pipenv by running the following command in your terminal:
 ```bash
 sudo apt install python3-pip python3-dev portaudio19-dev flac
-```
-
-To install pipenv, run the following command in your terminal or command prompt:
-
-```
 python3 -m pip install pipenv
 ```
-Next, navigate to the project directory and run the following command to install the project dependencies:
+## Windows - Raspbery Pi - Linux
+
+Navigate to the project directory and run the following command to install the project dependencies:
 ```bash
 pipenv install
 ```
@@ -70,7 +89,7 @@ This project is released under the [MIT License](https://opensource.org/licenses
 
 ## Credits
 
-This project was inspired by [SpeechRecognition documentation](https://pypi.org/project/SpeechRecognition/), [gTTS documentation](https://pypi.org/project/gTTS/), and [Pygame documentation](https://www.pygame.org/docs/).
+This project was inspired by [SpeechRecognition documentation](https://pypi.org/project/SpeechRecognition/), [openai documentation] (https://pypi.org/project/openai/), [gTTS documentation](https://pypi.org/project/gTTS/), and [Pygame documentation](https://www.pygame.org/docs/).
 
 ## Contact
 

@@ -11,8 +11,11 @@ def contains_wake_word(speech):
     return speech and WAKE_WORD.lower() in speech.lower()
 
 if __name__ == "__main__":
-    print(f"Initialisation de l'Assistant {WAKE_WORD} v0.1")
+    
+    print(f"Initialisation de l'Assistant {WAKE_WORD} v0.2")
+
     last_wake_word_time = 0  # initialize timer
+
     while True:
         speech = bot.get_audio_input()
 
@@ -29,4 +32,4 @@ if __name__ == "__main__":
             bot.send_message(speech)
             response = bot.get_response()
             last_wake_word_time = time.time()  # update timer
-            
+
