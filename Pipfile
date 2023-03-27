@@ -12,6 +12,7 @@ face-recognition = "*"
 opencv-python = "*"
 gtts = "*"
 pygame = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

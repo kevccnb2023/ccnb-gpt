@@ -9,10 +9,12 @@ import openai
 from multiprocessing import Pool
 import pygame
 import numpy as np
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 import threading
 import multiprocessing
-import queue
+import os
+from dotenv import load_dotenv
+load_dotenv()  # Load environment variables from the .env file
 
 def process_frame(frame, known_face_encodings, known_face_names):
     frame_rgb = frame
@@ -33,12 +35,10 @@ def process_frame(frame, known_face_encodings, known_face_names):
 
     return frame
 
-
-
 def video_capture_loop(face_recognizer, frame_queue):
     video_capture = cv2.VideoCapture(0)
     frame_count = 0
-    frame_modulus = 5  # Change this to 3 if you want to add every 3rd frame
+    frame_modulus = 1  # Change this to 3 if you want to add every 3rd frame
 
     while True:
         ret, frame = video_capture.read()
@@ -62,6 +62,31 @@ def face_recognition_loop(face_recognizer, frame_queue, result_queue):
 
         result_queue.put(frame)
 
+class CommandProcessor:
+    def __init__(self, model="gpt-3.5-turbo", initial_message="You are a helpful assistant."):
+        self.model = model
+        self.messages = [{"role": "system", "content": initial_message}]
+        self.api_key = os.getenv("OPENAI_API_KEY")
+        openai.api_key = self.api_key
+
+    def set_role(self, initial_message):
+        self.messages[0] = {"role": "system", "content": initial_message}
+
+    def send_message(self, message):
+        self.messages.append({"role": "user", "content": message})
+
+    def get_response(self, temperature=0.7, presence_penalty=0, frequency_penalty=0, n=1):
+        response = openai.ChatCompletion.create(
+            model=self.model,
+            messages=self.messages,
+            temperature=temperature,
+            presence_penalty=presence_penalty,
+            frequency_penalty=frequency_penalty,
+            n=n,
+        )
+        self.messages.append({"role": "assistant", "content": response.choices[0].message.content})
+        return response.choices[0].message.content
+    
 class DigitalAssistant:
     def __init__(self, db_file):
         self.db_file = db_file
@@ -81,30 +106,6 @@ class DigitalAssistant:
             self.known_face_encodings.append(np.frombuffer(face_encoding))
         conn.close()
 
-    def process_video(self):
-        video_capture = cv2.VideoCapture(0)  # Use 0 for the default camera
-
-        with ProcessPoolExecutor(max_workers=4) as executor:
-            while True:
-                ret, frame = video_capture.read()
-                if not ret:
-                    break
-
-                # Submit the frame for processing in a sepaqrate process
-                future = executor.submit(process_frame, frame, self.known_face_encodings, self.known_face_names)
-
-                # Get the processed frame with rectangles and names
-                processed_frame = future.result()
-
-                # Display the processed frame
-                cv2.imshow('Video', processed_frame)
-
-                # Break the loop if 'q' is pressed
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    break
-
-        video_capture.release()
-        cv2.destroyAllWindows()
 
     def listen_and_process(self):
         r = sr.Recognizer()
@@ -140,19 +141,17 @@ class DigitalAssistant:
 
     # Answer the query using GPT
     def answer_query(self, query):
-        response = openai.Completion.create(
-            engine="text-davinci-002",
-            prompt=f"{query}\n\nAnswer:",
-            max_tokens=50,
-            n=1,
-            stop=None,
-            temperature=0.5,
-        )
+        # Create an instance of CommandProcessor
+        cp = CommandProcessor()
 
-        answer = response.choices[0].text.strip()
+        # Send the query as a message
+        cp.send_message(query)
+
+        # Get the response
+        answer = cp.get_response().strip()
         return answer
     
-    def play_sound(file_path):
+    def play_sound(self, file_path):
         pygame.mixer.init()
         pygame.mixer.music.load(file_path)
         pygame.mixer.music.play()
@@ -216,12 +215,20 @@ class DigitalAssistant:
 
         detector_thread.join()
 
+
 def main():
     db_file = "./users.db"
 
     assistant = DigitalAssistant(db_file)
 
-    assistant.run()
+    try:
+        assistant.run()
+    except KeyboardInterrupt:
+        print("Terminating child processes...")
+        for proc in multiprocessing.active_children():
+            proc.terminate()
+            proc.join()
+   
 
 if __name__ == "__main__":
     main()
