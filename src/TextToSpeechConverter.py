@@ -1,7 +1,7 @@
 from gtts import gTTS
 import tempfile
 import pygame
-
+import time
 class TextToSpeechConverter:
     def __init__(self, language: str):
         self.language = language
@@ -15,6 +15,7 @@ class TextToSpeechConverter:
     def play_sound(self, file_path: str) -> None:
         pygame.mixer.init()
         pygame.mixer.music.load(file_path)
+        time.sleep(0.5)
         pygame.mixer.music.play()
 
         while pygame.mixer.music.get_busy():
