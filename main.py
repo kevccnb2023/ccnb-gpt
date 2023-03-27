@@ -8,13 +8,14 @@ from src.DigitalAssistant import DigitalAssistant
 from src.UserDB import UserDB
 
 def main():
+    WAKE_WORD = "hey you"
     db_file = "./users.db"
     db_connection = UserDB(db_file)
     speech_recognizer = SpeechRecognizer("en-US")
     text_to_speech_converter = TextToSpeechConverter("en")
     command_processor = CommandProcessor()
 
-    assistant = DigitalAssistant(speech_recognizer, text_to_speech_converter, command_processor, db_connection)
+    assistant = DigitalAssistant(WAKE_WORD, speech_recognizer, text_to_speech_converter, command_processor, db_connection)
 
     try:
         assistant.run()
