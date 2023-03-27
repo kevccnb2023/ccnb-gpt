@@ -1,24 +1,19 @@
 import cv2
-
 import sqlite3
 import speech_recognition as sr
 from gtts import gTTS
 import tempfile
-import openai
 import pygame
 import numpy as np
 import threading
 import multiprocessing
-import os
 from dotenv import load_dotenv
 
 from src.SpeechRecognizer import SpeechRecognizer
 from src.TextToSpeechConverter import TextToSpeechConverter
 from src.CommandProcessor import CommandProcessor
-from src.VideoCapture import VideoCapture
-
-
 from src.Utils import Utils
+
 load_dotenv()  # Load environment variables from the .env file
 
 class DigitalAssistant:
@@ -41,7 +36,6 @@ class DigitalAssistant:
             self.known_face_names.append(name)
             self.known_face_encodings.append(np.frombuffer(face_encoding))
         conn.close()
-
 
     def listen_and_process(self):
         while True:
@@ -67,39 +61,6 @@ class DigitalAssistant:
         answer = self.cp.get_response().strip()
         return answer
     
-    def play_sound(self, file_path):
-        pygame.mixer.init()
-        pygame.mixer.music.load(file_path)
-        pygame.mixer.music.play()
-
-        while pygame.mixer.music.get_busy():
-            pygame.time.Clock().tick(10)
-
-        pygame.mixer.quit()
-
-    # Convert text to speech
-    def text_to_speech(self, text):
-        tts = gTTS(text, lang="en")
-        with tempfile.NamedTemporaryFile(delete=True) as fp:
-            tts.save(f"{fp.name}.mp3")
-            self.play_sound(f"{fp.name}.mp3")
-
-    
-    # Convert speech to text
-    def speech_to_text(self):
-        r = sr.Recognizer()
-        with sr.Microphone() as source:
-            print("Listening...")
-            audio = r.listen(source)
-
-        try:
-            print("Recognizing...")
-            text = r.recognize_google(audio, language="en-US")
-            return text
-        except Exception as e:
-            print("Error:", e)
-            return None
-
     def run(self):
         frame_queue = multiprocessing.Queue(maxsize=10)
         result_queue = multiprocessing.Queue(maxsize=10)
@@ -146,19 +107,6 @@ def main():
         for proc in multiprocessing.active_children():
             proc.terminate()
             proc.join()
-# def main():
-#     db_file = "./users.db"
-
-#     assistant = DigitalAssistant(db_file)
-
-#     try:
-#         assistant.run()
-#     except KeyboardInterrupt:
-#         print("Terminating child processes...")
-#         for proc in multiprocessing.active_children():
-#             proc.terminate()
-#             proc.join()
-   
 
 if __name__ == "__main__":
     main()
