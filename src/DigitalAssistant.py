@@ -8,8 +8,7 @@ from src.UserDB import UserDB
 from src.Utils import Utils
 
 class DigitalAssistant:
-    def __init__(self, db_file, speech_recognizer: SpeechRecognizer, text_to_speech_converter: TextToSpeechConverter, cmd : CommandProcessor, db : UserDB):
-        self.db_file = db_file
+    def __init__(self, speech_recognizer: SpeechRecognizer, text_to_speech_converter: TextToSpeechConverter, cmd : CommandProcessor, db : UserDB):
         self.cp = cmd
         self.db = db
         self.speech_recognizer = speech_recognizer

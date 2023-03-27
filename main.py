@@ -14,7 +14,7 @@ def main():
     text_to_speech_converter = TextToSpeechConverter("en")
     command_processor = CommandProcessor()
 
-    assistant = DigitalAssistant(db_file, speech_recognizer, text_to_speech_converter, command_processor, db_connection)
+    assistant = DigitalAssistant(speech_recognizer, text_to_speech_converter, command_processor, db_connection)
 
     try:
         assistant.run()
