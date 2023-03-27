@@ -1,9 +1,5 @@
 import cv2
 import sqlite3
-import speech_recognition as sr
-from gtts import gTTS
-import tempfile
-import pygame
 import numpy as np
 import threading
 import multiprocessing
