@@ -25,7 +25,7 @@ class Utils:
     def video_capture_loop(face_recognizer, frame_queue):
         video_capture = cv2.VideoCapture(0)
         frame_count = 0
-        frame_modulus = 1  # Change this to 3 if you want to add every 3rd frame
+        frame_modulus = 5  # Change this to 3 if you want to add every 3rd frame
 
         while True:
             ret, frame = video_capture.read()
