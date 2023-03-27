@@ -1,19 +1,17 @@
 import face_recognition
 import cv2
 import sqlite3
-import multiprocessing as mp
 import speech_recognition as sr
 from gtts import gTTS
 import tempfile
 import openai
-from multiprocessing import Pool
 import pygame
 import numpy as np
-from concurrent.futures import ThreadPoolExecutor
 import threading
 import multiprocessing
 import os
 from dotenv import load_dotenv
+
 load_dotenv()  # Load environment variables from the .env file
 
 def process_frame(frame, known_face_encodings, known_face_names):
