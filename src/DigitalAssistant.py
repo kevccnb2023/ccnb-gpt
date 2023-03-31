@@ -15,15 +15,19 @@ class DigitalAssistant:
         self.speech_recognizer = speech_recognizer
         self.text_to_speech_converter = text_to_speech_converter
         self.known_face_encodings, self.known_face_names = db.get_users()
+        self.visible_known_face_encodings = []
+        self.visible_known_face_names = []
+
         self.WAKE_WORD = WAKE_WORD.lower()
         self.PAUSE_WAKE_WORD_SECONDS = 60
 
     def listen_and_process(self):
 
-        greet_message = f"hello {self.known_face_names[0]}. How are you today?"
-        self.text_to_speech_converter.convert(greet_message)
-        last_wake_word_time = time.time()  # update timer
+        last_wake_word_time = time.time() 
+        
+        # main part here 
         while True:
+            
             print("listening...")
             text = self.speech_recognizer.listen()
             

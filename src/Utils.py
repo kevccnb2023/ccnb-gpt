@@ -3,8 +3,11 @@ import cv2
 
 class Utils:
     @staticmethod
-    def process_frame(frame, known_face_encodings, known_face_names):
+    def process_frame(frame, assistant):
         frame_rgb = frame
+
+        known_face_encodings = assistant.known_face_encodings
+        known_face_names = assistant.known_face_names
 
         face_locations = face_recognition.face_locations(frame_rgb)
         face_encodings = face_recognition.face_encodings(frame_rgb, face_locations)
@@ -12,7 +15,7 @@ class Utils:
         for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
                 matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
                 name = 'Unknown'
-
+                assistant.visible_known_face_names.append(name)
                 if True in matches:
                     index = matches.index(True)
                     name = known_face_names[index]
@@ -39,13 +42,13 @@ class Utils:
         video_capture.release()
 
     @staticmethod
-    def face_recognition_loop(face_recognizer, frame_queue, result_queue):
+    def face_recognition_loop(assistant, frame_queue, result_queue):
         while True:
             frame = frame_queue.get()
             if frame is None:
                 break
 
             # Process the frame using the face_recognizer object
-            Utils.process_frame(frame, face_recognizer.known_face_encodings, face_recognizer.known_face_names)
+            Utils.process_frame(frame, assistant)
 
             result_queue.put(frame)
