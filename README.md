@@ -88,7 +88,7 @@ This will start the chatbot and prompt you to speak. Configure the wake word in 
 ```python
 
 # Instantiate a Chatbot object with a GPT-3.5 Turbo model and a custom initial message
-bot = ChatBot("davinci", "Hello, how can I assist you today?")
+bot = VoiceChatbot()
 
 # Send a message to the chatbot with a low temperature
 bot.send_message("Who won the world series in 2020?")
