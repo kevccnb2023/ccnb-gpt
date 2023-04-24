@@ -1,7 +1,11 @@
 import cv2
+import os
 import threading
 import multiprocessing
 import time
+import pvporcupine
+import struct
+import pyaudio
 from src.SpeechRecognizer import SpeechRecognizer
 from src.TextToSpeechConverter import TextToSpeechConverter
 from src.CommandProcessor import CommandProcessor
@@ -18,47 +22,66 @@ class DigitalAssistant:
         self.visible_known_face_encodings = []
         self.visible_known_face_names = []
 
-        self.WAKE_WORD = WAKE_WORD.lower()
+        self.WAKE_WORD = WAKE_WORD
         self.PAUSE_WAKE_WORD_SECONDS = 60
         self.no_video = no_video
+        self.porcupine = self.init_porcupine(WAKE_WORD)
+
+    def init_porcupine(self, wake_word):
+        porcupine = None
+        key = os.getenv("PICOVOICE_API_KEY")
+        try:
+            porcupine = pvporcupine.create(access_key=key,keywords=[wake_word])
+        except Exception as e:
+            print(f"Error initializing Porcupine: {e}")
+        return porcupine
 
     def listen_and_process(self):
+        if self.porcupine is None:
+            print("Porcupine is not initialized. Cannot use wake word functionality.")
+            return
 
-        last_wake_word_time = time.time() 
-        
-        # main part here 
-        while True:
-            
-            print("listening...")
-            text = self.speech_recognizer.listen()
-            
-            if text and self.WAKE_WORD in text.lower() and (time.time() - last_wake_word_time >= self.PAUSE_WAKE_WORD_SECONDS):
+        pa = pyaudio.PyAudio()
+        audio_stream = pa.open(
+            rate=self.porcupine.sample_rate,
+            channels=1,
+            format=pyaudio.paInt16,
+            input=True,
+            frames_per_buffer=self.porcupine.frame_length,
+            input_device_index=None)
 
+        self.is_listening = True
+        print("listening for wake word...")
+        while self.is_listening:  # Add the while loop here
+            
+            pcm = audio_stream.read(self.porcupine.frame_length)
+            pcm = struct.unpack_from("h" * self.porcupine.frame_length, pcm)
+            keyword_index = self.porcupine.process(pcm)
+
+            if keyword_index >= 0:
+                print("Wake word detected")
                 print("listening for question")
                 question = self.speech_recognizer.listen()
                 print("done listening for question")
 
                 if question:
-
-                    #query chatgpt
+                    # Query GPT
                     answer = self.answer_query(question)
 
-                    #speak audio response from chatgpt
+                    # Speak audio response from GPT
                     self.text_to_speech_converter.convert(answer)
-                    last_wake_word_time = time.time()  # update timer
                 else:
                     print("could not understand question")
 
-            elif text and (time.time() - last_wake_word_time < self.PAUSE_WAKE_WORD_SECONDS):
-                print("didnt need wake word!")
-                #query chatgpt
-                answer = self.answer_query(text)
-
-                #speak audio response from chatgpt
-                self.text_to_speech_converter.convert(answer)
-                last_wake_word_time = time.time()  # update timer
+        # Clean up resources
+        audio_stream.stop_stream()
+        audio_stream.close()
+        pa.terminate()
+        self.porcupine.delete()
 
 
+    def stop(self):
+        self.is_listening = False
 
     # Answer the query using GPT
     def answer_query(self, query):
@@ -99,3 +122,4 @@ class DigitalAssistant:
                 proc.join()
 
         detector_thread.join()
+

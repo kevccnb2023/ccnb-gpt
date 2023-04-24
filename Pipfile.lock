@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6ff4b751a3d461c5b5cdf5ffbe9ff3ae265aba4edc2563df528f678637df1006"
+            "sha256": "7df9c829778bbe9b99fb222e82d0c1b4fd17e9cc534ac943b5912386d2b4c5c5"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -575,6 +575,14 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==9.5.0"
+        },
+        "pvporcupine": {
+            "hashes": [
+                "sha256:c54becbf53c3239b09b1ac898716800f72e2a3c93da72a0f0aa5ac84d769879d",
+                "sha256:feb74175b148113e3be79d66433264be2c075159b1cae797962e56f871ec3151"
+            ],
+            "index": "pypi",
+            "version": "==2.2.0"
         },
         "pyaudio": {
             "hashes": [

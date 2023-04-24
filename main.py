@@ -6,9 +6,11 @@ from src.TextToSpeechConverter import TextToSpeechConverter
 from src.CommandProcessor import CommandProcessor
 from src.DigitalAssistant import DigitalAssistant
 from src.UserDB import UserDB
+from dotenv import load_dotenv
+load_dotenv()
 
 def main():
-    WAKE_WORD = "hey you"
+    WAKE_WORD = "terminator"
     db_file = "./users.db"
     db_connection = UserDB(db_file)
     speech_recognizer = SpeechRecognizer("en-US")
