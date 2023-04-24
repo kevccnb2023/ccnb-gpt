@@ -5,12 +5,12 @@ name = "pypi"
 
 [packages]
 speechrecognition = "*"
-pyaudio = "*"
 openai = "*"
 cmake = "*"
 face-recognition = "*"
 opencv-python = "*"
 gtts = "*"
+pyaudio = "*"
 pygame = "*"
 python-dotenv = "*"
 

@@ -9,7 +9,7 @@ from src.UserDB import UserDB
 from src.Utils import Utils
 
 class DigitalAssistant:
-    def __init__(self, WAKE_WORD, speech_recognizer: SpeechRecognizer, text_to_speech_converter: TextToSpeechConverter, cmd : CommandProcessor, db : UserDB):
+    def __init__(self, WAKE_WORD, speech_recognizer: SpeechRecognizer, text_to_speech_converter: TextToSpeechConverter, cmd : CommandProcessor, db : UserDB, no_video=False):
         self.cp = cmd
         self.db = db
         self.speech_recognizer = speech_recognizer
@@ -20,6 +20,7 @@ class DigitalAssistant:
 
         self.WAKE_WORD = WAKE_WORD.lower()
         self.PAUSE_WAKE_WORD_SECONDS = 60
+        self.no_video = no_video
 
     def listen_and_process(self):
 
@@ -73,26 +74,28 @@ class DigitalAssistant:
         detector_thread = threading.Thread(target=self.listen_and_process)
         detector_thread.start()
 
-        video_process = multiprocessing.Process(target=Utils.video_capture_loop, args=(self, frame_queue))
-        video_process.start()
+        if not self.no_video:
 
-        num_procs = multiprocessing.cpu_count() - 1
-        procs = []
-        for i in range(num_procs):
-            proc = multiprocessing.Process(target=Utils.face_recognition_loop, args=(self, frame_queue, result_queue))
-            proc.start()
-            procs.append(proc)
+            video_process = multiprocessing.Process(target=Utils.video_capture_loop, args=(self, frame_queue))
+            video_process.start()
 
-        while True:
-            frame = result_queue.get()
-            cv2.imshow('Video', frame)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
+            num_procs = multiprocessing.cpu_count() - 1
+            procs = []
+            for i in range(num_procs):
+                proc = multiprocessing.Process(target=Utils.face_recognition_loop, args=(self, frame_queue, result_queue))
+                proc.start()
+                procs.append(proc)
 
-        for i in range(num_procs):
-            frame_queue.put(None)
+            while True:
+                frame = result_queue.get()
+                cv2.imshow('Video', frame)
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
 
-        for proc in procs:
-            proc.join()
+            for i in range(num_procs):
+                frame_queue.put(None)
+
+            for proc in procs:
+                proc.join()
 
         detector_thread.join()

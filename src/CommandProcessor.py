@@ -1,8 +1,10 @@
 import openai
 import os
+from dotenv import load_dotenv
 
 class CommandProcessor:
     def __init__(self, model="gpt-3.5-turbo", initial_message="You are a helpful assistant."):
+        load_dotenv()
         self.model = model
         self.messages = [{"role": "system", "content": initial_message}]
         self.api_key = os.getenv("OPENAI_API_KEY")

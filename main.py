@@ -1,6 +1,6 @@
 
 import multiprocessing
-
+import argparse
 from src.SpeechRecognizer import SpeechRecognizer
 from src.TextToSpeechConverter import TextToSpeechConverter
 from src.CommandProcessor import CommandProcessor
@@ -14,8 +14,11 @@ def main():
     speech_recognizer = SpeechRecognizer("en-US")
     text_to_speech_converter = TextToSpeechConverter("en")
     command_processor = CommandProcessor()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--novideo', action='store_true', help='Disable facial recognition')
+    args = parser.parse_args()
 
-    assistant = DigitalAssistant(WAKE_WORD, speech_recognizer, text_to_speech_converter, command_processor, db_connection)
+    assistant = DigitalAssistant(WAKE_WORD, speech_recognizer, text_to_speech_converter, command_processor, db_connection, no_video=args.novideo)
 
     try:
         assistant.run()
