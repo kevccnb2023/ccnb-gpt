@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def main():
-    WAKE_WORD = "porcupine"
+    WAKE_WORD = "alexa"
     db_file = "./users.db"
     db_connection = UserDB(db_file)
     speech_recognizer = SpeechRecognizer("en-US")

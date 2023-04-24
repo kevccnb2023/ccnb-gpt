@@ -6,6 +6,10 @@ import time
 import pvporcupine
 import struct
 import pyaudio
+import requests
+from datetime import datetime, timedelta
+from pyowm.owm import OWM
+
 from src.SpeechRecognizer import SpeechRecognizer
 from src.TextToSpeechConverter import TextToSpeechConverter
 from src.CommandProcessor import CommandProcessor
@@ -35,6 +39,24 @@ class DigitalAssistant:
         except Exception as e:
             print(f"Error initializing Porcupine: {e}")
         return porcupine
+
+    def get_weather(self, city_name):
+        api_key = os.getenv("OPEN_WEATHER_API_KEY")
+        owm = OWM(api_key)
+        # Set the query parameters for the city and time period you want to get the forecast for
+        
+        dt = datetime.now() + timedelta(hours=4)  # Set the forecast time for 4 hours from now
+        weather_manager = owm.weather_manager()
+        current_observation = weather_manager.weather_at_place(city_name)
+
+        temperature = current_observation.weather.temperature('celsius')['temp']
+        description = current_observation.weather.detailed_status
+
+        forecast = weather_manager.forecast_at_place(city_name, '3h')
+        observation = forecast.get_weather_at(dt)
+        temp_tonight = observation.temperature('celsius')['temp']
+        desc_temp_tonight = observation.detailed_status
+        return (f"Right now, it's {description} and {temperature} °C.  Tonight, it will be {desc_temp_tonight} with a low of {temp_tonight}°C")
 
     def listen_and_process(self):
         if self.porcupine is None:
@@ -85,9 +107,14 @@ class DigitalAssistant:
 
     # Answer the query using GPT
     def answer_query(self, query):
-        self.cp.send_message(query)
-        answer = self.cp.get_response().strip()
-        return answer
+        query = query.lower()
+        if "weather" in query:
+            location = os.getenv("LOCATION")
+            return self.get_weather(location)
+        else:
+            self.cp.send_message(query)
+            answer = self.cp.get_response().strip()
+            return answer
     
     #main thread
     def run(self):
